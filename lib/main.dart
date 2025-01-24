@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shoes_app/consts/theme_data.dart';
 import 'package:shoes_app/providers/dark_theme_provider.dart';
+import 'package:shoes_app/screens/onboarding_screen.dart';
 import 'package:shoes_app/screens/payment_history.dart';
+import 'package:shoes_app/screens/settings_screen.dart';
+import 'package:shoes_app/screens/splash_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -56,7 +59,7 @@ class _MyAppState extends State<MyApp> {
           title: 'Shoes App',
           debugShowCheckedModeBanner: false,
           theme: Styles.themeData(themeProvider.getDarkTheme, context),
-          home: const PaymentHistory(),
+          home: const SplashScreen(),
         );
       }),
     );

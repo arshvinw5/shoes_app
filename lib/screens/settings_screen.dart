@@ -8,8 +8,8 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeState = Provider.of<DarkThemeProvider>(context);
-    return Container(
-      child: Center(
+    return Scaffold(
+      body: Center(
         child: SwitchListTile(
             title: Text(
               'Theme',
