@@ -63,6 +63,7 @@ flutter:
   assets:
     - assets/images/cash.jpg
     - assets/images/nike_logo.png
+    - assets/images/nike_white_logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

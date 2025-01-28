@@ -4,7 +4,7 @@ import 'package:shoes_app/providers/dark_theme_provider.dart';
 import 'package:shoes_app/screens/onboarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -27,20 +27,24 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final themeState = Provider.of<DarkThemeProvider>(context);
+    final themeState = Provider.of<DarkThemeProvider>(context).getDarkTheme;
     return Scaffold(
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        color: themeState.getDarkTheme
-            ? const Color(0xFF000000)
-            : const Color(0xfffef9f3),
+        color: themeState ? const Color(0xFF000000) : const Color(0xfffef9f3),
         child: Center(
-          child: Image.asset(
-            'assets/images/nike_logo.png',
-            height: 100,
-            width: 100,
-          ),
+          child: themeState
+              ? Image.asset(
+                  'assets/images/nike_white_logo.png',
+                  height: 100,
+                  width: 100,
+                )
+              : Image.asset(
+                  'assets/images/nike_logo.png',
+                  height: 100,
+                  width: 100,
+                ),
         ),
       ),
     );
