@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shoes_app/components/reuseable_button.dart';
 import 'package:shoes_app/providers/dark_theme_provider.dart';
-import 'package:shoes_app/screens/home.dart';
 import 'package:shoes_app/screens/settings_screen.dart';
 
 class OnBoardingScreen extends StatelessWidget {
