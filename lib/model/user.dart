@@ -6,6 +6,7 @@ class User {
   int? age;
   String? phone;
   String? imageUrl;
+  //creating address object's instance'
   Address? address;
 
   User({
@@ -28,6 +29,7 @@ class User {
         age = json['age'],
         phone = json['phone'],
         imageUrl = json['image'],
+        //to call the address object's constructor
         address =
             json['address'] != null ? Address.fromJson(json['address']) : null;
 
