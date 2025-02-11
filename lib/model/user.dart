@@ -59,3 +59,15 @@ class Address {
     return {'city': city};
   }
 }
+
+
+// Map<String, dynamic> addressJson = {'city': 'New York'};
+// Address address = Address.fromJson(addressJson);
+
+// print(address.city); // Output: New York
+
+
+// json['address'] → Extracts the JSON part for address (e.g., {'city': 'New York'}).
+// != null → Ensures address exists in JSON.
+// Address.fromJson(json['address']) → Converts the JSON to an Address object.
+// If address doesn’t exist, assign null.
