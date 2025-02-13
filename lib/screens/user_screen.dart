@@ -21,19 +21,18 @@ class _UserScreenState extends State<UserScreen> {
   List<bool> favouriteList = [];
 
   //to add favoirite user list
-  List<String> favouriteUserList = [];
+  List<User> favouriteUserList = [];
 
   Icon? favouriteIcon;
 
   @override
   void initState() {
     super.initState();
-    // You might remove this call if you are using FutureBuilder's future.
     apiService.getUsers().then((value) {
-      if (value.isNotEmpty) {
-        for (User user in value) {
-          favouriteList.add(false);
-        }
+      if (mounted) {
+        setState(() {
+          favouriteList = List.generate(value.length, (index) => false);
+        });
       }
     });
 
@@ -180,6 +179,12 @@ class _UserScreenState extends State<UserScreen> {
                           onPressed: () {
                             setState(() {
                               favouriteList[index] = !favouriteList[index];
+                              if (favouriteList[index]) {
+                                favouriteUserList.add(snapshot.data![index]);
+                              } else {
+                                favouriteUserList
+                                    .remove(snapshot.data?[index] ?? '');
+                              }
                             });
                           },
                           icon: getFavoiriteIcon(index),
@@ -197,17 +202,12 @@ class _UserScreenState extends State<UserScreen> {
   }
 
   Icon getFavoiriteIcon(int index) {
-    if (favouriteList[index]) {
-      return const Icon(
-        Icons.favorite,
-        color: Colors.red,
-      );
-    } else {
-      return const Icon(
-        Icons.favorite_border,
-        color: Colors.red,
-      );
+    if (favouriteList.isNotEmpty && index < favouriteList.length) {
+      return favouriteList[index]
+          ? const Icon(Icons.favorite, color: Colors.red)
+          : const Icon(Icons.favorite_border, color: Colors.red);
     }
+    return const Icon(Icons.favorite_border, color: Colors.red);
   }
 }
 

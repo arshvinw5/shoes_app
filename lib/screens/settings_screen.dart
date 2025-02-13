@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shoes_app/components/reuseable_button.dart';
 import 'package:shoes_app/providers/dark_theme_provider.dart';
-import 'package:shoes_app/screens/user_screen.dart';
+import 'package:shoes_app/screens/test_user_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -40,7 +39,8 @@ class SettingsScreen extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const UserScreen()),
+                    MaterialPageRoute(
+                        builder: (context) => const TestUserScreen()),
                   );
                 },
               ),
