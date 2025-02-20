@@ -42,6 +42,8 @@ class _TestUserScreenState extends State<TestUserScreen> {
         //If you call fetchUsers() directly inside FutureBuilder, i
         //t will fetch data every time the UI rebuilds (e.g., when you press the favorite button).
         //But by using futureUsers, we fetch data only once when the screen loads.
+
+        //need to update the method
         future: futureUsers,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

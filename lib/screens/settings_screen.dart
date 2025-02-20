@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shoes_app/providers/dark_theme_provider.dart';
+import 'package:shoes_app/screens/products.dart';
 import 'package:shoes_app/screens/test_user_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -41,6 +42,18 @@ class SettingsScreen extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) => const TestUserScreen()),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.shop),
+                title: const Text('Products'),
+                trailing: const Icon(Icons.arrow_forward),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ProductsScreen()),
                   );
                 },
               ),

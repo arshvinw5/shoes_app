@@ -42,6 +42,8 @@ class _UserScreenState extends State<UserScreen> {
     );
   }
 
+  //this is going to reload the screen when we press the favorite button
+
   @override
   Widget build(BuildContext context) {
     final themeState = Provider.of<DarkThemeProvider>(context).getDarkTheme;

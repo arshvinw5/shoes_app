@@ -44,6 +44,7 @@ class _NrUserScreenState extends State<NrUserScreen> {
 
     return Scaffold(
       body: RefreshIndicator(
+        //this method you need to refress the screen to get the user update
         onRefresh: fetchUsers,
         child: Container(
           color: themeState ? const Color(0xFF000000) : const Color(0xfffef9f3),
