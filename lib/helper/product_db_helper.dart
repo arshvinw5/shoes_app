@@ -78,7 +78,30 @@ class ProductDbHelper {
     Database db = await instance.database;
     final List<Map<String, dynamic>> maps = await db.query(_table_products);
     print(maps);
-    //this is loop through the list of maps and then add it to a list of products
+    //this is loop through the list of maps and then add it to a list of products from db
     return Products.fromList(maps);
+  }
+
+  ///So, when combined, where and whereArgs form the complete
+  ///WHERE clause: id = products.id. This tells the database to update
+  ///only the row(s) where the id column matches the id of the Products
+  /// object being updated.///
+
+  Future<Products> updateProduct(Products products) async {
+    //initialize database
+    Database db = await instance.database;
+
+    await db.update(_table_products, Products.toMap(products),
+        where: 'id=?', whereArgs: [products.id]);
+    return products;
+  }
+
+  Future deleteProduct(Products products) async {
+    //initialize database
+    Database db = await instance.database;
+    var deleteProduct = await db
+        .delete(_table_products, where: 'id=?', whereArgs: [products.id]);
+
+    return deleteProduct;
   }
 }

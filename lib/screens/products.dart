@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shoes_app/helper/product_db_helper.dart';
 import 'package:shoes_app/model/products.dart';
 import 'package:shoes_app/providers/dark_theme_provider.dart';
 
@@ -14,6 +15,23 @@ class _ProductsState extends State<ProductsScreen> {
   TextEditingController _nameController = TextEditingController();
   TextEditingController _priceController = TextEditingController();
   TextEditingController _quantityController = TextEditingController();
+
+  //to get the products from get method\
+
+  List<Products> productsList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    ProductDbHelper.instance.getProductsList().then((onValue) {
+      //use setState to update the list every time
+      setState(() {
+        //to update the list to make a list builder
+        productsList = onValue;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeState = Provider.of<DarkThemeProvider>(context).getDarkTheme;
@@ -21,7 +39,51 @@ class _ProductsState extends State<ProductsScreen> {
     return Scaffold(
       body: Center(
         child: Column(
-          children: [],
+          children: [
+            Expanded(
+                child: ListView.builder(
+              itemCount: productsList.length,
+              itemBuilder: (context, index) {
+                if (productsList.isEmpty) {
+                  return Center(
+                      child: Text(
+                    'No Products',
+                    style: TextStyle(
+                        color: themeState ? Colors.white : Colors.black),
+                  ));
+                } else {
+                  return GestureDetector(
+                    onTap: () {},
+                    child: Container(
+                      margin:
+                          EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                      decoration: BoxDecoration(
+                        color: themeState
+                            ? const Color(0xfffef9f3)
+                            : const Color(0xFF000000),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: ListTile(
+                          title: Text(productsList[index].name ?? '',
+                              style: TextStyle(
+                                  color:
+                                      themeState ? Colors.black : Colors.white,
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.bold)),
+                          subtitle: Text(
+                            'LKR ${productsList[index].price.toString()}',
+                            style: TextStyle(
+                                color: themeState ? Colors.black : Colors.white,
+                                fontSize: 15.0),
+                          ),
+                          trailing: IconButton(
+                              onPressed: () {}, icon: Icon(Icons.delete))),
+                    ),
+                  );
+                }
+              },
+            ))
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -50,7 +112,17 @@ class _ProductsState extends State<ProductsScreen> {
           products.price = double.parse(_priceController.text);
           //to convert string to int
           products.quantity = int.parse(_quantityController.text);
-          Navigator.of(context).pop();
+
+          ProductDbHelper.instance.insertProduct(products).then((onValue) {
+            ProductDbHelper.instance.getProductsList().then((onValue) {
+              //use setState to update the list every time
+              setState(() {
+                //to update the list to make a list builder
+                productsList = onValue;
+              });
+            });
+            Navigator.of(context).pop();
+          });
         }
       },
       child: Text('Save'),
