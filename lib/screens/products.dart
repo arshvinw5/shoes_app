@@ -19,6 +19,7 @@ class _ProductsState extends State<ProductsScreen> {
   //to get the products from get method\
 
   List<Products> productsList = [];
+  Products? _selectedProduct;
 
   @override
   void initState() {
@@ -65,6 +66,7 @@ class _ProductsState extends State<ProductsScreen> {
                       ),
                       child: ListTile(
                           title: Text(productsList[index].name ?? '',
+                              overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                   color:
                                       themeState ? Colors.black : Colors.white,
@@ -76,8 +78,38 @@ class _ProductsState extends State<ProductsScreen> {
                                 color: themeState ? Colors.black : Colors.white,
                                 fontSize: 15.0),
                           ),
-                          trailing: IconButton(
-                              onPressed: () {}, icon: Icon(Icons.delete))),
+                          trailing: Container(
+                            width: 100.0,
+                            child: Wrap(
+                              direction: Axis.horizontal,
+                              children: [
+                                IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        _selectedProduct = productsList[index];
+                                        showProductDialogBox(
+                                            context,
+                                            themeState
+                                                ? const Color(0xFF000000)
+                                                : const Color(0xfffef9f3),
+                                            InputType.UpdateProduct);
+                                      });
+                                    },
+                                    icon: Icon(
+                                      Icons.edit,
+                                      color: themeState
+                                          ? Colors.black
+                                          : Colors.white,
+                                    )),
+                                IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    )),
+                              ],
+                            ),
+                          )),
                     ),
                   );
                 }
@@ -88,8 +120,10 @@ class _ProductsState extends State<ProductsScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showProductDialogBox(context,
-              themeState ? const Color(0xFF000000) : const Color(0xfffef9f3));
+          showProductDialogBox(
+              context,
+              themeState ? const Color(0xFF000000) : const Color(0xfffef9f3),
+              InputType.AddProduct);
         },
         backgroundColor: themeState ? Colors.white : Colors.black,
         child: Icon(
@@ -100,29 +134,62 @@ class _ProductsState extends State<ProductsScreen> {
     );
   }
 
-  showProductDialogBox(BuildContext context, themeState) {
+  showProductDialogBox(BuildContext context, themeState, InputType type) {
+    bool isUpdateProduct = false;
+
+    isUpdateProduct = (type == InputType.UpdateProduct) ? true : false;
+
+    if (isUpdateProduct) {
+      _nameController.text = _selectedProduct!.name ?? '';
+      _priceController.text = _selectedProduct!.price.toString();
+      _quantityController.text = _selectedProduct!.quantity.toString();
+    }
     Widget saveButton = ElevatedButton(
       onPressed: () {
         if (_nameController.text.isNotEmpty &&
             _priceController.text.isNotEmpty &&
             _quantityController.text.isNotEmpty) {
-          Products products = Products();
-          products.name = _nameController.text;
-          //to convert string to double
-          products.price = double.parse(_priceController.text);
-          //to convert string to int
-          products.quantity = int.parse(_quantityController.text);
-
-          ProductDbHelper.instance.insertProduct(products).then((onValue) {
-            ProductDbHelper.instance.getProductsList().then((onValue) {
-              //use setState to update the list every time
-              setState(() {
-                //to update the list to make a list builder
-                productsList = onValue;
+          if (isUpdateProduct) {
+            setState(() {
+              _selectedProduct?.name = _nameController.text;
+              _selectedProduct?.price = double.parse(_priceController.text);
+              _selectedProduct?.quantity = int.parse(_quantityController.text);
+              ProductDbHelper.instance
+                  .updateProduct(_selectedProduct!)
+                  .then((onValue) {
+                ProductDbHelper.instance.getProductsList().then((onValue) {
+                  //use setState to update the list every time
+                  this.setState(() {
+                    //to update the list to make a list builder
+                    productsList = onValue;
+                  });
+                });
+                Navigator.of(context).pop();
+                _emptyTextFields();
               });
             });
-            Navigator.of(context).pop();
-          });
+          } else {
+            setState(() {
+              Products products = Products();
+              products.name = _nameController.text;
+              //to convert string to double
+              products.price = double.parse(_priceController.text);
+              //to convert string to int
+              products.quantity = int.parse(_quantityController.text);
+
+              ProductDbHelper.instance.insertProduct(products).then((onValue) {
+                ProductDbHelper.instance.getProductsList().then((onValue) {
+                  //use setState to update the list every time
+                  this.setState(() {
+                    //to update the list to make a list builder
+                    productsList = onValue;
+                  });
+                });
+                Navigator.of(context).pop();
+                _emptyTextFields();
+              });
+            });
+          }
         }
       },
       child: Text('Save'),
@@ -136,7 +203,7 @@ class _ProductsState extends State<ProductsScreen> {
     );
 
     AlertDialog productDialogBox = AlertDialog(
-      title: Text('Add new product'),
+      title: Text(isUpdateProduct ? 'Update product' : 'Add new product'),
       backgroundColor: themeState,
       content: Container(
         child: Wrap(
@@ -168,4 +235,12 @@ class _ProductsState extends State<ProductsScreen> {
 
     showDialog(context: context, builder: (context) => productDialogBox);
   }
+
+  void _emptyTextFields() {
+    _nameController.text = '';
+    _priceController.text = '';
+    _quantityController.text = '';
+  }
 }
+
+enum InputType { AddProduct, UpdateProduct }
