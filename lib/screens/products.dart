@@ -102,7 +102,23 @@ class _ProductsState extends State<ProductsScreen> {
                                           : Colors.white,
                                     )),
                                 IconButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      setState(() {
+                                        _selectedProduct = productsList[index];
+                                      });
+
+                                      ProductDbHelper.instance
+                                          .deleteProduct(_selectedProduct!)
+                                          .then((value) {
+                                        ProductDbHelper.instance
+                                            .getProductsList()
+                                            .then((onValue) {
+                                          setState(() {
+                                            productsList = onValue;
+                                          });
+                                        });
+                                      });
+                                    },
                                     icon: Icon(
                                       Icons.delete,
                                       color: Colors.red,
